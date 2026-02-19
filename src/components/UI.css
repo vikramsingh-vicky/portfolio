@@ -806,6 +806,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 1.25rem;
+  perspective: 1000px;
 }
 
 .timeline-item {
@@ -816,12 +817,19 @@
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
-  transition: background 0.2s, border-color 0.2s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s, border-color 0.2s, transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
 
 .timeline-item:hover {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.1);
+  transform: perspective(1000px) rotateX(-3deg) translateY(-6px) translateZ(10px);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.18),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .timeline-marker {
@@ -870,6 +878,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
   gap: 1.25rem;
+  perspective: 1000px;
 }
 
 .card {
@@ -880,14 +889,18 @@
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  transition: border-color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+  transition: border-color 0.25s, background 0.25s, transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
 
 .card:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.18);
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(232, 184, 109, 0.1);
+  transform: perspective(1000px) rotateX(-4deg) translateY(-8px) translateZ(12px);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.25),
+    0 12px 24px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(232, 184, 109, 0.12);
 }
 
 .card h3 {
@@ -991,17 +1004,25 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 1.25rem;
+  perspective: 1000px;
 }
 
 .skill-category {
   padding: 1.25rem 1.25rem 1rem;
   border-radius: 16px;
-  transition: border-color 0.2s, background 0.2s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.2s, background 0.2s, transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
 
 .skill-category:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.12);
+  transform: perspective(1000px) rotateX(-3deg) translateY(-5px) translateZ(8px);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.15),
+    0 6px 12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(232, 184, 109, 0.08);
 }
 
 .skill-category-name {
@@ -1071,17 +1092,23 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
+  perspective: 1000px;
 }
 
 .thought-card {
   padding: 1.25rem;
   border-radius: 14px;
-  transition: transform 0.2s, border-color 0.2s;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, border-color 0.2s, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
 }
 
 .thought-card:hover {
-  transform: translateY(-2px);
+  transform: perspective(1000px) rotateX(-3deg) translateY(-5px) translateZ(8px);
   border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.15),
+    0 6px 12px rgba(0, 0, 0, 0.08);
 }
 
 .thought-title {
@@ -1596,8 +1623,8 @@
   }
 
   .hero-intro {
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
+    font-size: clamp(2.9rem, 7.5vw, 4.5rem);
+    letter-spacing: -0.025em;
     margin-bottom: 0.75rem;
   }
 
