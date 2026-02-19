@@ -18,6 +18,8 @@
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: 100vw;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -28,6 +30,7 @@
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
 }
 
 .nav-brand {
@@ -117,35 +120,131 @@
   color: #0c0e12;
 }
 
+/* Portaled mobile menu – side panel + backdrop */
+.nav-menu-overlay-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
+.nav-menu-overlay-wrap * {
+  pointer-events: auto;
+}
+
+.nav-menu-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.nav-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(280px, 85vw);
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: rgba(12, 14, 18, 0.98);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.nav-menu-overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-menu-overlay-close {
+  background: none;
+  border: none;
+  color: #e8b86d;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  font-family: inherit;
+}
+
+.nav-menu-overlay-close:hover {
+  color: #f0c87a;
+}
+
+.nav-menu-overlay-links {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-menu-overlay-links li button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+  background: none;
+  font-family: inherit;
+  transition: color 0.2s, background 0.2s;
+}
+
+.nav-menu-overlay-links li button:hover {
+  color: #e8b86d;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-menu-overlay-links li button.active {
+  color: #0c0e12;
+  background: rgba(232, 184, 109, 0.95);
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 769px) {
+  .nav-menu-overlay-wrap {
+    display: none !important;
+  }
+}
+
 @media (max-width: 768px) {
+  .nav {
+    z-index: 9999;
+  }
+
+  .nav-brand,
+  .nav-toggle {
+    position: relative;
+    z-index: 10001;
+  }
+
   .nav-toggle {
     display: flex;
   }
 
-  .nav-links {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 1rem;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 0.3s, opacity 0.3s;
+  /* Hide in-nav menu on mobile; portaled overlay is used instead */
+  .nav .nav-links {
+    display: none !important;
   }
 
-  .nav-links.open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
+  /* When overlay is open, hide nav X so only overlay close button shows */
+  .nav.menu-open .nav-toggle {
+    display: none !important;
   }
 }
 
@@ -158,6 +257,7 @@
   padding: 6rem 1.5rem 4rem;
   width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* Hero */
@@ -1282,7 +1382,9 @@
 /* ========== Responsive: tablet and below ========== */
 @media (max-width: 768px) {
   .main {
+    z-index: 1;
     max-width: 100%;
+    width: 100%;
     padding: 5rem 1.25rem 3rem;
     min-width: 0;
     overflow-x: hidden;
@@ -1479,6 +1581,8 @@
   }
 
   .main {
+    width: 100%;
+    max-width: 100%;
     padding: 4.5rem 1rem 2.5rem;
   }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { cv } from "../data/cv";
 import "./UI.css";
 
@@ -90,9 +91,46 @@ export function UI() {
     contact: "Contact",
   };
 
+  const mobileMenuOverlay = menuOpen ? (
+    <div className="nav-menu-overlay-wrap" role="dialog" aria-modal="true" aria-label="Menu">
+      <div
+        className="nav-menu-overlay-backdrop"
+        onClick={() => setMenuOpen(false)}
+        aria-hidden
+      />
+      <div className="nav-menu-overlay">
+        <div className="nav-menu-overlay-header">
+          <button
+            type="button"
+            className="nav-menu-overlay-close"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
+        </div>
+        <ul className="nav-menu-overlay-links">
+          {SECTIONS.map((id) => (
+            <li key={id}>
+              <button
+                type="button"
+                className={activeSection === id ? "active" : ""}
+                onClick={() => scrollTo(id)}
+              >
+                {navLabels[id]}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
-      <nav className="nav">
+      {typeof document !== "undefined" &&
+        createPortal(mobileMenuOverlay, document.body)}
+      <nav className={`nav ${menuOpen ? "menu-open" : ""}`}>
         <button
           type="button"
           className="nav-brand"
