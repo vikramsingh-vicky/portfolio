@@ -76,6 +76,13 @@ export const cv = {
         { name: "GitHub", rating: 4 },
       ],
     },
+    {
+      name: "Cloud Services",
+      items: [
+        { name: "Google Cloud", rating: 1 },
+        { name: "AWS", rating: 1 }
+      ],
+    },
   ],
   phone: "7379747622",
   location: "Tughlakabad Extension, New Delhi",
