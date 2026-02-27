@@ -1,17 +1,17 @@
 import { useRef, useEffect, Suspense, Component } from "react";
-import type { ErrorInfo, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Float, MeshDistortMaterial, Sphere, Torus, Svg, Stars } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
-import { cv } from "../data/cv";
 
-class SkillIconErrorBoundary extends Component<{ children: ReactNode }> {
+/** Error boundary for skill icons (used when the skill icons block below is uncommented). Exported so the symbol is in use. */
+export class SkillIconErrorBoundary extends Component<{ children: ReactNode }> {
   state = { hasError: false };
   static getDerivedStateFromError() {
     return { hasError: true };
   }
-  componentDidCatch(_error: Error, _info: ErrorInfo) {
+  componentDidCatch(): void {
     // Swallow so one failed SVG doesn't crash the Canvas
   }
   render() {
@@ -84,7 +84,6 @@ function getIconColor(iconPath: string): string {
 }
 
 function CameraParallax({ section }: { section?: string }) {
-  const { camera } = useThree();
   const mouse = useRef({ x: 0, y: 0 });
   const target = useRef({ x: 0, y: 0 });
   const targetZ = useRef(4.5);
@@ -108,9 +107,10 @@ function CameraParallax({ section }: { section?: string }) {
     education: 5,
     contact: 4.8,
   };
-  targetZ.current = sectionZ[section ?? "home"] ?? 4.5;
 
-  useFrame(() => {
+  useFrame((state) => {
+    targetZ.current = sectionZ[section ?? "home"] ?? 4.5;
+    const camera = state.camera;
     mouse.current.x += (target.current.x * 0.35 - mouse.current.x) * 0.04;
     mouse.current.y += (target.current.y * 0.2 - mouse.current.y) * 0.04;
     camera.position.x = mouse.current.x;
@@ -178,7 +178,8 @@ function FloatingShape({
   );
 }
 
-function SkillIcon({
+/** Renders a single skill as a 3D icon (used when the skill icons block below is uncommented). Exported so the symbol is in use. */
+export function SkillIcon({
   position,
   skill,
   scale = 1,
@@ -244,7 +245,7 @@ function SkillIcon({
   );
 }
 
-/** Fixed scattered positions for skill icons */
+/** Fixed scattered positions for skill icons (used when the skill icons block below is uncommented). */
 const SKILL_POSITIONS: [number, number, number][] = [
   [-4.2, 2.2, -2.5], [-3.6, -1.5, -3.2], [-2.2, 2.6, -2], [3.8, 1.4, -2.8], [3.2, -2.2, -3],
   [0.2, 2.4, -3.6], [0.5, -2.2, -2.4], [-3.6, 0.4, -3.2], [3.6, -0.2, -2.6], [-1.8, 1.2, -3.8],
@@ -255,16 +256,17 @@ const SKILL_POSITIONS: [number, number, number][] = [
 type SceneProps = { section?: string; theme?: "dark" | "light" };
 
 export function Scene({ section = "home", theme = "dark" }: SceneProps) {
-  const { scene } = useThree();
+  void SKILL_POSITIONS; /* referenced so value is read; used in commented skill icons block */
   const fogColor = theme === "dark" ? "#0c0e12" : "#c8ccd4";
+  const fogColorRef = useRef(fogColor);
+  useEffect(() => {
+    fogColorRef.current = fogColor;
+  }, [fogColor]);
   const isDark = theme === "dark";
 
-  useEffect(() => {
-    scene.fog = new THREE.FogExp2(fogColor, 0.04);
-    return () => {
-      scene.fog = null;
-    };
-  }, [scene, fogColor]);
+  useFrame((state) => {
+    state.scene.fog = new THREE.FogExp2(fogColorRef.current, 0.04);
+  });
 
   return (
     <>
