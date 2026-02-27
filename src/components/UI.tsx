@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
+import { FcGoogle } from "react-icons/fc";
 import { cv } from "../data/cv";
 import "./UI.css";
 
-const SECTIONS = ["home", "about", "projects", "experience", "tools", "contact"] as const;
+const GOOGLE_SKILL_NAMES = ["Google Apps Script", "Google Workspace", "AppSheet", "Google Cloud"];
+
+export const SECTIONS = ["home", "about", "projects", "experience", "tools", "education", "contact"] as const;
 
 function LinkedInIcon() {
   return (
@@ -21,36 +24,31 @@ function LinkedInIcon() {
 
 const FORMSPREE_FORM_ID = import.meta.env.VITE_FORMSPREE_FORM_ID || "";
 
-export function UI() {
-  const [activeSection, setActiveSection] = useState<string>("home");
+type Theme = "dark" | "light";
+
+export function UI({
+  theme,
+  onToggleTheme,
+  activeSection,
+  onSectionChange,
+}: {
+  theme: Theme;
+  onToggleTheme: () => void;
+  activeSection: string;
+  onSectionChange: (id: string) => void;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [formData, setFormData] = useState({ name: "", company: "", email: "", subject: "", message: "" });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-            break;
-          }
-        }
-      },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
-    );
-    SECTIONS.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
   const scrollTo = (id: string) => {
-    setActiveSection(id);
+    onSectionChange(id);
     setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
+
+  const sectionIndex = SECTIONS.indexOf(activeSection as (typeof SECTIONS)[number]);
+  const slideClass = (i: number) =>
+    i === sectionIndex ? "active" : i < sectionIndex ? "prev" : "next";
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +86,7 @@ export function UI() {
     experience: "Experience",
     projects: "Projects",
     tools: "Tools",
+    education: "Education",
     contact: "Contact",
   };
 
@@ -139,34 +138,53 @@ export function UI() {
         >
           VS
         </button>
-        <button
-          type="button"
-          className="nav-toggle"
-          onClick={() => setMenuOpen((o) => !o)}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-        >
-          <span className={menuOpen ? "open" : ""} />
-          <span className={menuOpen ? "open" : ""} />
-          <span className={menuOpen ? "open" : ""} />
-        </button>
-        <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
-          {SECTIONS.map((id) => (
-            <li key={id}>
-              <button
-                type="button"
-                className={activeSection === id ? "active" : ""}
-                onClick={() => scrollTo(id)}
-              >
-                {navLabels[id]}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="nav-right">
+          <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
+            {SECTIONS.map((id) => (
+              <li key={id}>
+                <button
+                  type="button"
+                  className={activeSection === id ? "active" : ""}
+                  onClick={() => scrollTo(id)}
+                >
+                  {navLabels[id]}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <div className="nav-actions">
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={onToggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {theme === "dark" ? (
+              <span className="theme-icon" aria-hidden>☀️</span>
+            ) : (
+              <span className="theme-icon" aria-hidden>🌙</span>
+            )}
+          </button>
+          <button
+            type="button"
+            className="nav-toggle"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+          >
+            <span className={menuOpen ? "open" : ""} />
+            <span className={menuOpen ? "open" : ""} />
+            <span className={menuOpen ? "open" : ""} />
+          </button>
+          </div>
+        </div>
       </nav>
 
-      <main className="main">
-        {/* Hero */}
+      <main className="main deck-container">
+        <div className="deck">
+          {/* Hero */}
+          <div className={`section-slide ${slideClass(0)}`} data-index={0}>
         <section id="home" className="hero">
           <div className="hero-overlay" aria-hidden />
           {/* <div className="hero-glow" aria-hidden /> */}
@@ -236,17 +254,21 @@ export function UI() {
             <span>Scroll</span>
             <span className="hero-scroll-line" />
           </div>
-        </section>       
+        </section>
+          </div>
 
-        {/* About */}
+          {/* About */}
+          <div className={`section-slide ${slideClass(1)}`} data-index={1}>
         <section id="about" className="section">
           <h2 className="section-head">
             <span className="section-head-main">About</span>
           </h2>
           <p className="section-lead">{cv.profile}</p>
         </section>
+          </div>
 
-        {/* Recent Projects - Sawad style */}
+          {/* Recent Projects */}
+          <div className={`section-slide ${slideClass(2)}`} data-index={2}>
         <section id="projects" className="section">
           <h2 className="section-head">
             <span className="section-head-main">Recent</span>
@@ -282,36 +304,37 @@ export function UI() {
             ))}
           </div>
         </section>
+          </div>
 
-        {/* Experience - Sawad style "Years of Experience" */}
+          {/* Experience */}
+          <div className={`section-slide ${slideClass(3)}`} data-index={3}>
         <section id="experience" className="section">
           <h2 className="section-head">
             <span className="section-head-main">{cv.stats[0].value} Years of</span>
             <span className="section-head-sub">Experience</span>
           </h2>
-          <div className="timeline">
+          <div className="cards">
             {cv.experience.map((job, i) => (
-              <article key={i} className="timeline-item glass">
-                <div className="timeline-marker" />
-                <div className="timeline-content">
-                  <span className="timeline-period">{job.period}</span>
-                  <h3>{job.role}</h3>
-                  <p className="timeline-company">
-                    {job.company}
-                    {job.location && ` · ${job.location}`}
-                  </p>
-                  <ul>
-                    {job.points.map((point, j) => (
-                      <li key={j}>{point}</li>
-                    ))}
-                  </ul>
-                </div>
+              <article key={i} className="card glass">
+                <h3>{job.role}</h3>
+                <span className="card-role">
+                  {job.period}
+                  {job.company && ` · ${job.company}`}
+                  {job.location && ` · ${job.location}`}
+                </span>
+                <ul className="card-points">
+                  {job.points.map((point, j) => (
+                    <li key={j}>{point}</li>
+                  ))}
+                </ul>
               </article>
             ))}
           </div>
         </section>
+          </div>
 
-        {/* Tools & Skills - by category with ratings */}
+          {/* Tools & Skills */}
+          <div className={`section-slide ${slideClass(4)}`} data-index={4}>
         <section id="tools" className="section">
           <h2 className="section-head">
             <span className="section-head-main">Tools &</span>
@@ -324,7 +347,12 @@ export function UI() {
                 <ul className="skill-category-list">
                   {category.items.map((item, j) => (
                     <li key={j} className="skill-with-rating">
-                      <span className="skill-with-rating-name">{item.name}</span>
+                      <span className="skill-with-rating-name">
+                        {GOOGLE_SKILL_NAMES.includes(item.name) && (
+                          <FcGoogle className="skill-icon skill-icon-google" aria-hidden />
+                        )}
+                        {item.name}
+                      </span>
                       <div className="skill-rating" title={`${item.rating}/5`}>
                         <div
                           className="skill-rating-fill"
@@ -339,8 +367,28 @@ export function UI() {
             ))}
           </div>
         </section>
+          </div>
 
-        {/* Thoughts / Interests - Sawad style */}
+          {/* Education */}
+          <div className={`section-slide ${slideClass(5)}`} data-index={5}>
+        <section id="education" className="section">
+          <h2 className="section-head">
+            <span className="section-head-main">Education</span>
+          </h2>
+          <div className="cards">
+            {cv.education.map((item, i) => (
+              <article key={i} className="card glass">
+                <h3 className="education-degree">{item.degree}</h3>
+                <span className="card-role">{item.period}</span>
+                <p className="education-institution">{item.institution}</p>
+                {"location" in item && item.location && (
+                  <p className="education-meta">{item.location}</p>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+        {/* Beyond Work - inside education slide */}
         <section className="section thoughts-section">
           <h2 className="section-head">
             <span className="section-head-main">Beyond</span>
@@ -354,8 +402,10 @@ export function UI() {
             ))}
           </div>
         </section>
+          </div>
 
-        {/* Contact - Let's Work Together with form + WhatsApp QR */}
+          {/* Contact */}
+          <div className={`section-slide ${slideClass(6)}`} data-index={6}>
         <section id="contact" className="section contact">
           <h2 className="section-head">
             <span className="section-head-main">Let&apos;s Work</span>
@@ -492,11 +542,12 @@ export function UI() {
             </aside>
           </div>
         </section>
+            <footer className="footer">
+              <p>Vikram Singh · Automation & Full Stack Developer · Built with React & Three.js</p>
+            </footer>
+          </div>
+        </div>
       </main>
-
-      <footer className="footer">
-        <p>Vikram Singh · Automation & Full Stack Developer · Built with React & Three.js</p>
-      </footer>
     </>
   );
 }
