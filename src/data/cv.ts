@@ -31,14 +31,21 @@ export const cv = {
         { name: "JavaScript", rating: 5 },
         { name: "Python", rating: 3 },
         { name: "VBA", rating: 5 },
+        { name: "C", rating: 4 },
+        { name: "PHP", rating: 4 },
       ],
     },
     {
       name: "Frontend & UI",
       items: [
         { name: "React.js", rating: 4 },
+        { name: "Next.js", rating: 4 },
+        { name: "TypeScript", rating: 4 },
         { name: "HTML", rating: 5 },
         { name: "CSS", rating: 5 },
+        { name: "Tailwind CSS", rating: 4 },
+        { name: "Bootstrap", rating: 4 },
+        { name: "Material UI", rating: 4 },
       ],
     },
     {
@@ -46,6 +53,8 @@ export const cv = {
       items: [
         { name: "Node.js", rating: 4 },
         { name: "Express", rating: 4 },
+        { name: "Django", rating: 4 },
+        { name: "Flask", rating: 4 },
       ],
     },
     {
@@ -53,6 +62,11 @@ export const cv = {
       items: [
         { name: "MySQL", rating: 4 },
         { name: "Excel", rating: 5 },
+        { name: "Google Sheets", rating: 5 },
+        { name: "Firebase", rating: 4 },
+        { name: "MongoDB", rating: 4 },
+        { name: "SQLite", rating: 4 },
+        { name: "SQL Server", rating: 4 },
       ],
     },
     {
@@ -74,6 +88,7 @@ export const cv = {
       items: [
         { name: "Git", rating: 4 },
         { name: "GitHub", rating: 4 },
+        { name: "GitLab", rating: 2 },
       ],
     },
     {
@@ -230,8 +245,16 @@ export const cv = {
     "AppSheet",
     "Git",
     "GitHub",
+    "Google Cloud",
+    "AWS",
   ],
   education: [
+    {
+      degree: "Post Graduate Diploma in Artificial Intelligence and Machine Learning",
+      institution: "Great Lakes Institute of Technology",
+      period: "2023 – 2024",
+      location: "New Delhi, India",
+    },
     {
       degree: "Bachelor Of Engineering (Computer Science)",
       institution: "Institution of Electronics and Telecommunication Engineers",
