@@ -31,17 +31,34 @@ function App() {
 
   useEffect(() => {
     const handler = (e: WheelEvent) => {
-      e.preventDefault();
       if (wheelLock.current) return;
+      const activeSlide = document.querySelector(".section-slide.active") as HTMLElement | null;
+      if (activeSlide) {
+        const { scrollTop, scrollHeight, clientHeight } = activeSlide;
+        const canScrollDown = scrollTop + clientHeight < scrollHeight - 2;
+        const canScrollUp = scrollTop > 2;
+        if (e.deltaY > 0 && canScrollDown) {
+          activeSlide.scrollTop = Math.min(scrollTop + e.deltaY, scrollHeight - clientHeight);
+          e.preventDefault();
+          return;
+        }
+        if (e.deltaY < 0 && canScrollUp) {
+          activeSlide.scrollTop = Math.max(0, scrollTop + e.deltaY);
+          e.preventDefault();
+          return;
+        }
+      }
       const idx = SECTIONS.indexOf(section as (typeof SECTIONS)[number]);
       if (idx < 0) return;
       if (e.deltaY > 0 && idx < SECTIONS.length - 1) {
+        e.preventDefault();
         wheelLock.current = true;
         setSection(SECTIONS[idx + 1]);
         setTimeout(() => {
           wheelLock.current = false;
         }, 600);
       } else if (e.deltaY < 0 && idx > 0) {
+        e.preventDefault();
         wheelLock.current = true;
         setSection(SECTIONS[idx - 1]);
         setTimeout(() => {

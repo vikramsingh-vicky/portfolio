@@ -104,6 +104,27 @@ export const cv = {
   /** WhatsApp QR / contact link (scan to chat) */
   whatsAppQrUrl: "https://wa.me/qr/RWGDRN3SOF7WC1",
   linkedIn: "https://www.linkedin.com/in/vikramsingh-dme",
+  /** Updated CV / online resume */
+  resumeUrl: "https://flowcv.com/resume/rt8f553akq",
+  /** About section: structured for enhanced UI */
+  about: {
+    intro: [
+      "Automation Engineer and Full-Stack Developer with 10+ years of experience designing and implementing scalable business systems across MIS, workflow automation, and web application development. I specialize in architecting data-centric solutions that eliminate manual dependencies and create reliable, maintainable operational infrastructure.",
+      "My technical stack includes Google Apps Script, JavaScript (ES6+), React.js, Node.js, Express.js, MySQL/SQL, Excel VBA, and Looker Studio, with hands-on experience in RESTful APIs, database schema design, backend logic optimization, and front-end state management.",
+    ],
+    strengthsHeading: "Core technical strengths include:",
+    strengths: [
+      "Designing end-to-end automation architectures (data ingestion → processing → reporting)",
+      "Building modular, maintainable backend services using Node.js & Express",
+      "Developing responsive, component-driven UIs with React.js",
+      "Writing optimized SQL queries and designing normalized database schemas",
+      "Creating event-driven automations and workflow orchestration using Google Apps Script",
+      "Implementing dashboarding and analytics pipelines for real-time business intelligence",
+      "Reducing system latency and improving data integrity through validation and structured logging",
+    ],
+    closing:
+      "I focus on building systems that are scalable, fault-tolerant, and extensible — engineered for performance, clarity, and long-term maintainability.",
+  },
   profile:
     "Results-driven Automation Developer with 10+ years of experience in MIS, business automation, and web application development. Skilled in Google Apps Script, JavaScript, React.js, Node.js, Express.js, MySQL/SQL, Excel VBA, and dashboarding (Looker Studio). Proven ability to gather requirements, design scalable solutions, and deliver end-to-end systems that reduce manual effort, improve accuracy, and streamline operations for cross-functional teams.",
   experience: [

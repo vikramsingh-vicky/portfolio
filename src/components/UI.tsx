@@ -1,10 +1,54 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { FcGoogle } from "react-icons/fc";
 import { cv } from "../data/cv";
 import "./UI.css";
 
-const GOOGLE_SKILL_NAMES = ["Google Apps Script", "Google Workspace", "AppSheet", "Google Cloud"];
+/** Simple Icons CDN base; slug gets appended as {slug}.svg */
+const SIMPLE_ICONS_BASE = "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons";
+
+/** Map skill name → Simple Icons slug or full SVG URL (for icons that need brand colors). */
+const SKILL_ICON_MAP: Record<string, string> = {
+  JavaScript: "javascript",
+  Python: "python",
+  VBA: "microsoft",
+  C: "c",
+  PHP: "php",
+  "React.js": "react",
+  "Next.js": "nextdotjs",
+  TypeScript: "typescript",
+  HTML: "html5",
+  CSS: "css3",
+  "Tailwind CSS": "tailwindcss",
+  Bootstrap: "bootstrap",
+  "Material UI": "materialdesign",
+  "Node.js": "nodedotjs",
+  Express: "express",
+  Django: "django",
+  Flask: "flask",
+  MySQL: "mysql",
+  Excel: "microsoftexcel",
+  "Google Sheets": "googlesheets",
+  Firebase: "firebase",
+  MongoDB: "mongodb",
+  SQLite: "sqlite",
+  "SQL Server": "microsoftsqlserver",
+  "Google Apps Script": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_Apps_Script.svg",
+  "Google Workspace": "https://upload.wikimedia.org/wikipedia/commons/c/c9/G_Suite_Markplace_icon.svg",
+  AppSheet: "google",
+  "Looker Studio": "looker",
+  Git: "git",
+  GitHub: "github",
+  GitLab: "gitlab",
+  "Google Cloud": "googlecloud",
+  AWS: "amazonaws",
+};
+
+const DEFAULT_ICON_SLUG = "google";
+
+function getSkillIconUrl(skillName: string): string {
+  const path = SKILL_ICON_MAP[skillName] ?? DEFAULT_ICON_SLUG;
+  return path.startsWith("http") ? path : `${SIMPLE_ICONS_BASE}/${path}.svg`;
+}
 
 export const SECTIONS = ["home", "about", "projects", "experience", "tools", "education", "contact"] as const;
 
@@ -136,7 +180,7 @@ export function UI({
           onClick={() => scrollTo("home")}
           aria-label="Home"
         >
-          VS
+          <img src="/logo.png" alt="VS" className="nav-logo" />
         </button>
         <div className="nav-right">
           <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
@@ -205,6 +249,9 @@ export function UI({
                 <a href={cv.linkedIn} target="_blank" rel="noopener noreferrer" className="hero-linkedin-link" aria-label="LinkedIn profile">
                   <LinkedInIcon />
                 </a>
+                <a href={cv.resumeUrl} target="_blank" rel="noopener noreferrer" className="hero-cv-link" aria-label="View CV">
+                  CV
+                </a>
               </div>
             </div>
             <aside className="hero-roles glass">
@@ -259,11 +306,24 @@ export function UI({
 
           {/* About */}
           <div className={`section-slide ${slideClass(1)}`} data-index={1}>
-        <section id="about" className="section">
+        <section id="about" className="section section-about">
           <h2 className="section-head">
             <span className="section-head-main">About</span>
           </h2>
-          <p className="section-lead">{cv.profile}</p>
+          <div className="about-content glass">
+            <div className="about-intro">
+              {cv.about.intro.map((paragraph, i) => (
+                <p key={i} className="about-text">{paragraph}</p>
+              ))}
+            </div>
+            <h3 className="about-strengths-heading">{cv.about.strengthsHeading}</h3>
+            <ul className="about-strengths-list">
+              {cv.about.strengths.map((item, i) => (
+                <li key={i} className="about-strengths-item">{item}</li>
+              ))}
+            </ul>
+            <p className="about-closing">{cv.about.closing}</p>
+          </div>
         </section>
           </div>
 
@@ -348,9 +408,15 @@ export function UI({
                   {category.items.map((item, j) => (
                     <li key={j} className="skill-with-rating">
                       <span className="skill-with-rating-name">
-                        {GOOGLE_SKILL_NAMES.includes(item.name) && (
-                          <FcGoogle className="skill-icon skill-icon-google" aria-hidden />
-                        )}
+                        <img
+                          src={getSkillIconUrl(item.name)}
+                          alt=""
+                          className="skill-icon"
+                          loading="lazy"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = "none";
+                          }}
+                        />
                         {item.name}
                       </span>
                       <div className="skill-rating" title={`${item.rating}/5`}>
@@ -537,6 +603,15 @@ export function UI({
                 >
                   <LinkedInIcon />
                   <span className="contact-linkedin-text">&nbsp;LinkedIn</span>
+                </a>
+                <a
+                  href={cv.resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-cv-link"
+                  aria-label="View CV"
+                >
+                  <span className="contact-cv-text">View CV</span>
                 </a>
               </div>
             </aside>
